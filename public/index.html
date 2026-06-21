@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedSync — Felega Health | Find Medication, Instantly</title>
+<meta name="description" content="MedSync (Felega Health) is an O2O Pharmacy Aggregator for Addis Ababa. Search medications, get matched with nearby pharmacies, and lock stock instantly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ============== AUTH GATEWAY SCREEN ============== -->
+<section class="auth-screen" id="auth-screen">
+  <div class="auth-particles" aria-hidden="true">
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span><span class="particle"></span>
+  </div>
+
+  <div class="auth-container">
+    <div class="auth-brand">
+      <span class="auth-brand-mark" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 26 26" fill="none">
+          <path d="M13 2 L13 24 M2 13 L24 13" stroke="url(#auth-pulse-grad)" stroke-width="3.2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="auth-pulse-grad" x1="0" y1="0" x2="26" y2="26">
+              <stop offset="0" stop-color="#00B4D8"/>
+              <stop offset="1" stop-color="#80FFDB"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </span>
+      <h1 class="auth-title">Med<span class="grad-text">Sync</span></h1>
+      <p class="auth-subtitle">Felega Health · O2O Pharmacy Aggregator</p>
+    </div>
+
+    <!-- Auth Toggle -->
+    <div class="auth-toggle" role="tablist" aria-label="Switch between login and signup">
+      <button class="auth-toggle-btn active" id="auth-tab-login" role="tab" aria-selected="true">Log In</button>
+      <button class="auth-toggle-btn" id="auth-tab-signup" role="tab" aria-selected="false">Sign Up</button>
+      <span class="auth-toggle-glider" id="auth-toggle-glider"></span>
+    </div>
+
+    <!-- Login Form -->
+    <form class="auth-form" id="login-form" autocomplete="off">
+      <div class="auth-field">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" required>
+      </div>
+      <div class="auth-field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" required minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full auth-submit" id="login-submit-btn">
+        <span id="login-btn-text">Log In</span>
+        <span id="login-btn-spinner" class="spinner hidden"></span>
+      </button>
+      <p class="auth-error hidden" id="login-error"></p>
+    </form>
+
+    <!-- Signup Form -->
+    <form class="auth-form hidden" id="signup-form" autocomplete="off">
+      <div class="auth-field">
+        <label for="signup-name">Full name</label>
+        <input type="text" id="signup-name" placeholder="e.g. Hana Tesfaye" required>
+      </div>
+      <div class="auth-field">
+        <label for="signup-email">Email address</label>
+        <input type="email" id="signup-email" placeholder="you@example.com" required>
+      </div>
+      <div class="auth-field">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" placeholder="Min 6 characters" required minlength="6">
+      </div>
+      <div class="auth-field">
+        <label for="signup-role">I am registering as</label>
+        <select id="signup-role" required>
+          <option value="patient">Patient / User</option>
+          <option value="pharmacy_staff">Pharmacy Staff</option>
+          <option value="admin">System Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full auth-submit" id="signup-submit-btn">
+        <span id="signup-btn-text">Create Account</span>
+        <span id="signup-btn-spinner" class="spinner hidden"></span>
+      </button>
+      <p class="auth-error hidden" id="signup-error"></p>
+    </form>
+
+    <p class="auth-footer">Addis Ababa · Ethiopia 🇪🇹</p>
+  </div>
+</section>
+
+<!-- ============== APP SHELL (hidden until authenticated) ============== -->
+<div class="app-shell hidden" id="app-shell">
+
+<!-- ============== TOP NAV ============== -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+        <path d="M13 2 L13 24 M2 13 L24 13" stroke="url(#pulse-grad)" stroke-width="3.2" stroke-linecap="round"/>
+        <defs>
+          <linearGradient id="pulse-grad" x1="0" y1="0" x2="26" y2="26">
+            <stop offset="0" stop-color="#00B4D8"/>
+            <stop offset="1" stop-color="#80FFDB"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </span>
+    <div class="brand-text">
+      <span class="brand-name">MedSync</span>
+      <span class="brand-sub">Felega Health · Addis Ababa</span>
+    </div>
+  </div>
+
+  <div class="view-toggle" role="tablist" aria-label="Switch dashboard view" id="view-toggle-bar">
+    <button class="toggle-btn active" id="toggle-patient" role="tab" aria-selected="true">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-9 2.2-9 5v2h18v-2c0-2.8-4.6-5-9-5Z"/></svg>
+      Patient
+    </button>
+    <button class="toggle-btn" id="toggle-pharmacy" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 7h-3V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2ZM10 5h4v2h-4Zm3 9h-2v2H9.5v-2h-2v-2h2V9.5H11V12h2Z"/></svg>
+      Pharmacy
+    </button>
+    <button class="toggle-btn" id="toggle-admin" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Admin
+    </button>
+    <span class="toggle-glider" id="toggle-glider" aria-hidden="true"></span>
+  </div>
+
+  <div class="topbar-right">
+    <div class="user-info" id="user-info">
+      <span class="user-avatar" id="user-avatar">U</span>
+      <span class="user-name" id="user-name">User</span>
+    </div>
+    <span class="status-pill" id="connection-pill">
+      <span class="dot"></span> Live
+    </span>
+    <button class="btn-logout" id="logout-btn" aria-label="Log out" title="Log out">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============== PATIENT DASHBOARD ============== -->
+<main class="view view-patient active" id="patient-dash">
+
+  <section class="hero-strip">
+    <div class="hero-copy">
+      <h1>Stop walking. Start <span class="grad-text">finding.</span></h1>
+      <p>Type the medication you need. We broadcast it to pharmacies near you — the first to confirm stock locks it in for you.</p>
+    </div>
+    <div class="hero-pulse" aria-hidden="true">
+      <svg viewBox="0 0 300 60" class="ekg-line">
+        <polyline points="0,30 40,30 55,10 70,50 85,30 130,30 145,15 158,45 172,30 300,30"
+          fill="none" stroke="url(#ekg-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="ekg-grad" x1="0" y1="0" x2="300" y2="0">
+            <stop offset="0" stop-color="#00B4D8" stop-opacity="0.2"/>
+            <stop offset="0.5" stop-color="#80FFDB"/>
+            <stop offset="1" stop-color="#00B4D8" stop-opacity="0.2"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <section class="search-panel card">
+    <form id="request-form" autocomplete="off">
+      <div class="field-row">
+        <div class="field grow">
+          <label for="patient_name">Your name</label>
+          <input type="text" id="patient_name" name="patient_name" placeholder="e.g. Hana Tesfaye" required>
+        </div>
+        <div class="field grow-2">
+          <label for="medication_name">Medication name</label>
+          <input type="text" id="medication_name" name="medication_name" placeholder="e.g. Amoxicillin 500mg" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field grow">
+          <label for="notes">Notes <span class="optional">(quantity, dosage, anything helpful)</span></label>
+          <input type="text" id="notes" name="notes" placeholder="e.g. 21 capsules, adult dose">
+        </div>
+        <button type="submit" class="btn btn-primary btn-send">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          Send Request
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="dashboard-grid">
+
+    <div class="card requests-panel">
+      <div class="panel-header">
+        <h2>Your requests</h2>
+        <span class="hint">Live status tracker</span>
+      </div>
+      <div class="status-legend">
+        <span class="legend-item"><i class="dot dot-pending"></i> Pending</span>
+        <span class="legend-item"><i class="dot dot-matched"></i> Matched</span>
+        <span class="legend-item"><i class="dot dot-locked"></i> Locked</span>
+        <span class="legend-item"><i class="dot dot-pickedup"></i> Picked Up</span>
+      </div>
+      <div id="patient-requests-list" class="requests-list">
+        <p class="empty-state">No requests yet — send one above to start the search.</p>
+      </div>
+    </div>
+
+    <div class="card map-panel">
+      <div class="panel-header">
+        <h2>Click &amp; Collect</h2>
+        <span class="hint">Pharmacy location</span>
+      </div>
+      <div id="map-simulation" class="map-simulation">
+        <div class="map-placeholder">
+          <svg viewBox="0 0 24 24" width="40" height="40"><path fill="currentColor" d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+          <p>Lock a medication to reveal pickup directions here.</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<!-- ============== PHARMACY DASHBOARD ============== -->
+<main class="view view-pharmacy" id="pharmacy-dash">
+
+  <section class="pharmacy-header card">
+    <div class="field" id="pharmacy-select-container">
+      <label for="pharmacy_select">Acting as pharmacy</label>
+      <select id="pharmacy_select"></select>
+    </div>
+    <div class="pharmacy-status-toggle">
+      <label>Store Status</label>
+      <button class="btn btn-status-online" id="pharmacy-status-btn" type="button">
+        <span class="status-indicator online"></span>
+        <span id="pharmacy-status-text">Online / Active</span>
+      </button>
+    </div>
+    <div class="pharmacy-stats">
+      <div class="stat">
+        <span class="stat-num" id="stat-open">0</span>
+        <span class="stat-label">Open requests</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-claimed">0</span>
+        <span class="stat-label">Claimed by you</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-today-claims">0</span>
+        <span class="stat-label">Claims Today</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-avg-time">0m</span>
+        <span class="stat-label">Avg Response Time</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="pharmacy-tabs" role="tablist">
+    <button class="pharmacy-tab active" id="tab-pharmacy-live" role="tab" aria-selected="true">
+      Live Broadcast
+    </button>
+    <button class="pharmacy-tab" id="tab-pharmacy-completed" role="tab" aria-selected="false">
+      Completed Orders
+    </button>
+  </div>
+
+  <section class="card feed-panel" id="pharmacy-live-section">
+    <div class="panel-header">
+      <h2>Live broadcast feed</h2>
+      <span class="hint">Newest requests from patients nearby</span>
+    </div>
+    <div id="pharmacy-feed-list" class="requests-list">
+      <p class="empty-state">No open requests right now. New patient requests will appear here in real time.</p>
+    </div>
+  </section>
+
+  <section class="card feed-panel hidden" id="pharmacy-completed-section">
+    <div class="panel-header">
+      <h2>Completed Orders</h2>
+      <span class="hint">Prescriptions successfully matched, paid, and collected</span>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Patient Name</th>
+            <th>Medication</th>
+            <th>Telebirr Ref</th>
+            <th>Completed Time</th>
+          </tr>
+        </thead>
+        <tbody id="pharmacy-completed-tbody">
+          <tr><td colspan="5" class="empty-state">No completed orders yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============== SYSTEM ADMIN DASHBOARD ============== -->
+<main class="view view-admin" id="admin-dash">
+
+  <section class="admin-hero">
+    <h1>System <span class="grad-text">Command Center</span></h1>
+    <p class="admin-hero-sub">Master overview of all MedSync platform activity</p>
+  </section>
+
+  <section class="admin-kpi-grid" id="admin-kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-requests">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-number" id="kpi-active-requests">—</span>
+        <span class="kpi-label">Active Requests</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-pharmacies">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M19 7h-3V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2ZM10 5h4v2h-4Zm3 9h-2v2H9.5v-2h-2v-2h2V9.5H11V12h2Z"/></svg>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-number" id="kpi-pharmacies">—</span>
+        <span class="kpi-label">Registered Pharmacies</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-volume">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-number" id="kpi-volume">—</span>
+        <span class="kpi-label">Transaction Volume (ETB)</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-users">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-number" id="kpi-patients">—</span>
+        <span class="kpi-label">Registered Patients</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card admin-table-panel">
+    <div class="panel-header">
+      <h2>All Platform Requests</h2>
+      <span class="hint">System-wide medication request log</span>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table" id="admin-requests-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Medication</th>
+            <th>Status</th>
+            <th>Pharmacy</th>
+            <th>Fee Paid</th>
+            <th>Telebirr Ref</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="admin-requests-tbody">
+          <tr><td colspan="8" class="empty-state">Loading data…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============== TELEBIRR MODAL ============== -->
+<div class="modal-overlay" id="telebirr-modal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+
+    <div class="telebirr-header">
+      <svg viewBox="0 0 24 24" width="28" height="28"><path fill="#80FFDB" d="M12 2 2 7v6c0 5.4 3.8 10.4 10 12 6.2-1.6 10-6.6 10-12V7Zm-1.2 14.6-4.4-4.4 1.4-1.4 3 3 6-6 1.4 1.4Z"/></svg>
+      <span>Telebirr Payment</span>
+    </div>
+
+    <h3 id="modal-title">Lock Stock Reservation</h3>
+    <p class="modal-sub">Medication: <strong id="modal-med-name">—</strong></p>
+    <p class="modal-sub">Pharmacy: <strong id="modal-pharmacy-name">—</strong></p>
+
+    <div class="telebirr-amount">
+      <span class="amount-label">Amount due</span>
+      <span class="amount-value">20.00 <small>ETB</small></span>
+    </div>
+
+    <div class="telebirr-fields">
+      <div class="field">
+        <label for="telebirr_phone">Telebirr phone number</label>
+        <input type="tel" id="telebirr_phone" placeholder="09xx xxx xxx" value="0911 234 567">
+      </div>
+      <div class="field">
+        <label for="telebirr_pin">PIN</label>
+        <input type="password" id="telebirr_pin" placeholder="••••" maxlength="4" value="1234">
+      </div>
+    </div>
+
+    <p class="telebirr-note">This is a simulated micro-reservation fee that locks your medication so no one else can claim it. No real money is transferred in this demo.</p>
+
+    <button class="btn btn-primary btn-full" id="confirm-pay-btn">
+      <span id="pay-btn-text">Pay 20 ETB &amp; Lock Stock</span>
+      <span id="pay-btn-spinner" class="spinner hidden"></span>
+    </button>
+  </div>
+</div>
+
+<!-- ============== AI CHAT WIDGET ============== -->
+<button class="chat-fab" id="chat-fab" aria-label="Open MedSync AI Assistant">
+  <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2C6.5 2 2 5.9 2 10.7c0 2.7 1.5 5.1 3.8 6.7-.1 1.1-.5 2.4-1.5 3.7-.2.2-.1.6.2.7.1 0 .2.1.3.1 1.9-.2 3.6-.9 4.9-1.8.7.1 1.5.2 2.3.2 5.5 0 10-3.9 10-8.7C22 5.9 17.5 2 12 2Z"/></svg>
+  <span class="chat-fab-badge" id="chat-fab-badge"></span>
+</button>
+
+<aside class="chat-sidebar" id="chat-sidebar" aria-hidden="true">
+  <div class="chat-header">
+    <div class="chat-header-title">
+      <span class="chat-pulse-dot"></span>
+      <div>
+        <strong>MedSync AI Assistant</strong>
+        <small>Powered by Groq · llama3-8b-8192</small>
+      </div>
+    </div>
+    <button class="chat-close" id="chat-close" aria-label="Close chat">&times;</button>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-msg assistant">
+      <p>Hi! I'm your MedSync AI Assistant. I can help explain generic vs. brand drug names, what dosage directions mean, and common substitutes. What medication can I help you understand?</p>
+    </div>
+  </div>
+
+  <div class="chat-suggestions" id="chat-suggestions">
+    <button class="chip">What's the generic for Panadol?</button>
+    <button class="chip">Explain "take 2x daily"</button>
+    <button class="chip">Substitute for Amoxicillin?</button>
+  </div>
+
+  <form class="chat-input-row" id="chat-form">
+    <input type="text" id="chat-input" placeholder="Ask about a medication..." autocomplete="off">
+    <button type="submit" class="chat-send" aria-label="Send">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </form>
+</aside>
+
+</div><!-- end #app-shell -->
+
+<!-- ============== TOAST CONTAINER ============== -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
